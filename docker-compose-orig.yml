@@ -1,0 +1,11 @@
+services:
+  geth:
+    image: ethereum/client-go:v1.14.0
+    command: --http --http.addr 0.0.0.0 --http.port 8545 --dev --dev.period 2 --mine --miner.etherbase 0x6cb3eb12b868d25ec42f985fa9c52a9d5b5e933b
+    ports:
+      - "8545:8545"
+
+
+
+
+

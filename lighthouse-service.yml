@@ -1,0 +1,18 @@
+services:
+  lighthouse:
+    image: sigp/lighthouse:latest
+    command:
+      - lighthouse
+      - bn
+      - --network
+      - holesky
+      - --debug-level
+      - info
+    volumes:
+      - lighthouse-data:/root/.lighthouse
+
+volumes:
+  lighthouse-data:
+
+
+

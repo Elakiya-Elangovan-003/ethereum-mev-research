@@ -1,0 +1,25 @@
+{
+  "name": "ethereum-mev-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "mev-monitor.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Elakiya-Elangovan-003/ethereum-mev-research.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Elakiya-Elangovan-003/ethereum-mev-research/issues"
+  },
+  "homepage": "https://github.com/Elakiya-Elangovan-003/ethereum-mev-research#readme",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "ethers": "^6.16.0"
+  }
+}

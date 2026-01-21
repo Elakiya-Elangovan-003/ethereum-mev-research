@@ -1,11 +1,73 @@
 services:
   geth:
-    image: ethereum/client-go:v1.14.0
-    command: --http --http.addr 0.0.0.0 --http.port 8545 --dev --dev.period 2 --mine --miner.etherbase 0x6cb3eb12b868d25ec42f985fa9c52a9d5b5e933b
+    image: ethereum/client-go:v1.13.15
     ports:
       - "8545:8545"
+      - "8546:8546"
+      - "8551:8551"
+      - "30303:30303"
+    command:
+      - --networkid=1337
+      - --http
+      - --http.addr=0.0.0.0
+      - --http.port=8545
+      - --http.corsdomain=*
+      - --http.api=eth,net,web3,debug,txpool
+      - --ws
+      - --ws.addr=0.0.0.0
+      - --ws.port=8546
+      - --ws.origins=*
+      - --ws.api=eth,net,web3,debug,txpool
+      - --authrpc.addr=0.0.0.0
+      - --authrpc.port=8551
+      - --authrpc.vhosts=*
+      - --authrpc.jwtsecret=/jwtsecret
+      - --nodiscover
+      - --syncmode=full
+      - --allow-insecure-unlock
+    volumes:
+      - geth-data:/root/.ethereum
+      - ./jwtsecret:/jwtsecret:ro
+    restart: unless-stopped
 
+  lighthouse:
+    image: sigp/lighthouse:latest
+    ports:
+      - "5052:5052"
+      - "9000:9000"
+    command:
+      - lighthouse
+      - bn
+      - --network=mainnet
+      - --execution-endpoint=http://geth:8551
+      - --execution-jwt=/jwtsecret
+      - --http
+      - --http-address=0.0.0.0
+      - --http-port=5052
+      - --builder=http://mev-boost:18550
+      - --allow-insecure-genesis-sync
+      - --debug-level=info
+      - --suggested-fee-recipient=0x0000000000000000000000000000000000000000
+    volumes:
+      - lighthouse-data:/root/.lighthouse
+      - ./jwtsecret:/jwtsecret:ro
+    depends_on:
+      - geth
+    restart: unless-stopped
 
+  mev-boost:
+    image: flashbots/mev-boost:latest
+    ports:
+      - "18550:18550"
+    command:
+      - -mainnet
+      - -relay-check
+      - -relay=https://0xac6e77dfe25ecd6110b8e780608cce0dab71fdd5ebea22a16c0205200f2f8e2e3ad3b71d3499c54ad14d6c21b41a37ae@boost-relay.flashbots.net
+      - -addr=0.0.0.0:18550
+    restart: unless-stopped
+    depends_on:
+      - lighthouse
 
-
-
+volumes:
+  geth-data: {}
+  lighthouse-data: {}
